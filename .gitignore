@@ -1,0 +1,18 @@
+# Build outputs
+/bpdrive
+*.exe
+*.test
+*.out
+
+# Runtime data and secrets
+/data/config.json
+/data/*.tmp
+/data/*.bak
+
+# Local editor and OS files
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+

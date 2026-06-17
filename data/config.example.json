@@ -1,0 +1,27 @@
+{
+  "app_key": "your_baidu_app_key",
+  "secret_key": "your_baidu_secret_key",
+  "redirect_uri": "oob",
+  "php_base_url": "",
+  "default_dir": "/",
+  "admin_user": "admin",
+  "admin_pass": "admin",
+  "site_title": "度盘",
+  "token": {
+    "access_token": "",
+    "refresh_token": "",
+    "expires_in": 0,
+    "scope": "",
+    "created_at": 0,
+    "grant_url": "",
+    "refresh_url": ""
+  },
+  "user": {
+    "baidu_name": "",
+    "netdisk_name": "",
+    "avatar_url": "",
+    "uk": 0,
+    "vip_type": ""
+  },
+  "updated_at": 0
+}

@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>度盘</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css?v=20260616-auth-auto">
+</head>
+<body class="login-mode">
+  <div id="appShell" class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <img class="brand-mark" src="/static/logo.svg" alt="">
+        <span><b id="brandTitle">度盘</b><small>网盘控制台</small></span>
+      </div>
+      <button data-tab="drive" class="nav active"><span class="nav-icon">D</span>网盘</button>
+      <button data-tab="auth" class="nav"><span class="nav-icon">A</span>授权配置</button>
+      <button data-tab="settings" class="nav"><span class="nav-icon">S</span>设置</button>
+      <div class="side-spacer"></div>
+      <button id="adminLogout" class="ghost">退出后台</button>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <h1 id="title">度盘</h1>
+          <p id="userLine">正在读取状态</p>
+        </div>
+      </header>
+
+    <section id="drive" class="panel active">
+      <div class="overview">
+        <div class="metric">
+          <span>授权状态</span>
+          <strong id="metricAuth">读取中</strong>
+        </div>
+        <div class="metric">
+          <span>当前目录</span>
+          <strong id="metricPath">/</strong>
+        </div>
+        <div class="metric">
+          <span>文件项目</span>
+          <strong id="metricItems">0</strong>
+        </div>
+      </div>
+      <div class="pathbar">
+        <div class="path-input path-nav-wrap">
+          <nav id="pathCrumbs" class="path-crumbs" aria-label="文件路径"></nav>
+        </div>
+        <div class="path-actions">
+          <button id="reload" class="ghost" title="刷新">刷新</button>
+          <button id="up" class="ghost" title="上级目录">上级目录</button>
+          <button id="mkdir" class="ghost">新建目录</button>
+          <button id="copy" class="ghost">复制</button>
+          <button id="move" class="ghost">移动</button>
+          <button id="delete" class="danger">删除</button>
+        </div>
+      </div>
+      <div class="file-shell">
+        <div class="table-head">
+          <div>
+            <h2>文件列表</h2>
+            <p id="tableHint">按名称排序，点击目录进入下级。</p>
+          </div>
+          <span id="selectionHint">未选择项目</span>
+        </div>
+        <table>
+          <thead><tr><th></th><th>名称</th><th>大小</th><th>修改时间</th><th>下载</th></tr></thead>
+          <tbody id="files"></tbody>
+        </table>
+        <div id="empty" class="empty">当前目录为空</div>
+      </div>
+    </section>
+
+    <section id="auth" class="panel">
+      <div class="auth-panel">
+        <div class="qr-box official-frame">
+          <img id="authFrame" alt="百度网盘授权二维码">
+          <div id="qrEmpty">正在生成百度网盘授权二维码</div>
+        </div>
+        <div id="qrStatus" class="qr-status">等待扫码</div>
+        <div class="auth-buttons">
+          <button id="reloadQR" type="button">刷新二维码</button>
+          <button id="refreshToken" class="ghost" type="button">刷新令牌</button>
+          <button id="logout" class="danger" type="button">退出授权</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="settings" class="panel">
+      <div class="settings-grid single">
+        <div class="form">
+          <div class="section-title">
+            <h2>站点设置</h2>
+            <p>这里仅管理 Go 程序显示和后台访问参数。</p>
+          </div>
+          <label>站点名称<input id="siteTitle"></label>
+          <label>默认显示目录<input id="defaultDir" value="/"></label>
+          <label>后台账号<input id="adminUser" value="admin"></label>
+          <label>后台密码<input id="adminPass" type="password" placeholder="留空则不修改"></label>
+          <button id="saveSettings">保存设置</button>
+        </div>
+      </div>
+    </section>
+    </main>
+  </div>
+
+  <dialog id="editor">
+    <h2>文本编辑</h2>
+    <textarea id="editContent"></textarea>
+    <footer>
+      <button id="saveText">保存</button>
+      <button id="closeEditor" class="ghost">关闭</button>
+    </footer>
+  </dialog>
+
+  <dialog id="modal">
+    <h2 id="modalTitle">输入</h2>
+    <label><span id="modalLabel">内容</span><input id="modalInput"></label>
+    <footer>
+      <button id="modalCancel" class="ghost">取消</button>
+      <button id="modalOk">确定</button>
+    </footer>
+  </dialog>
+
+  <dialog id="shareModal" class="share-modal">
+    <h2 id="shareTitle">分享</h2>
+    <div class="share-list">
+      <label>
+        <span>百度原生网址</span>
+        <textarea id="nativeShareLink" class="share-link" readonly rows="2"></textarea>
+      </label>
+      <label>
+        <span>本域名短网址</span>
+        <textarea id="localShareLink" class="share-link" readonly rows="2"></textarea>
+      </label>
+    </div>
+    <footer>
+      <button id="closeShare" class="ghost" type="button">关闭</button>
+    </footer>
+  </dialog>
+
+  <dialog id="imagePreview" class="image-preview">
+    <header>
+      <h2 id="previewTitle">图片预览</h2>
+      <div class="preview-tools">
+        <button id="prevPreview" class="ghost" type="button">上一张</button>
+        <button id="nextPreview" class="ghost" type="button">下一张</button>
+        <button id="zoomOut" class="ghost" type="button">缩小</button>
+        <button id="zoomReset" class="ghost" type="button">适应</button>
+        <button id="zoomIn" class="ghost" type="button">放大</button>
+        <button id="closePreview" class="ghost" type="button">关闭</button>
+      </div>
+    </header>
+    <div id="previewStage" class="preview-stage">
+      <img id="previewImage" alt="图片预览">
+    </div>
+    <footer>
+      <button id="previewDownload" type="button">下载</button>
+      <button id="previewShare" class="ghost" type="button">分享</button>
+    </footer>
+  </dialog>
+
+  <dialog id="videoPreview" class="video-preview">
+    <header>
+      <h2 id="videoTitle">视频播放</h2>
+      <div class="preview-tools">
+        <button id="prevVideo" class="ghost" type="button">上一个</button>
+        <button id="nextVideo" class="ghost" type="button">下一个</button>
+        <button id="closeVideo" class="ghost" type="button">关闭</button>
+      </div>
+    </header>
+    <div class="video-stage">
+      <video id="previewVideo" controls playsinline preload="metadata"></video>
+    </div>
+    <footer>
+      <button id="videoDownload" type="button">下载</button>
+      <button id="videoShare" class="ghost" type="button">分享</button>
+    </footer>
+  </dialog>
+
+  <dialog id="audioPreview" class="audio-preview">
+    <header>
+      <h2 id="audioTitle">音频播放</h2>
+      <div class="preview-tools">
+        <button id="prevAudio" class="ghost" type="button">上一个</button>
+        <button id="nextAudio" class="ghost" type="button">下一个</button>
+        <button id="closeAudio" class="ghost" type="button">关闭</button>
+      </div>
+    </header>
+    <div class="audio-stage">
+      <div class="audio-art">音频</div>
+      <audio id="previewAudio" controls preload="metadata"></audio>
+    </div>
+    <footer>
+      <button id="audioDownload" type="button">下载</button>
+      <button id="audioShare" class="ghost" type="button">分享</button>
+    </footer>
+  </dialog>
+
+  <dialog id="textPreview" class="text-preview">
+    <header>
+      <h2 id="textTitle">文本预览</h2>
+      <div class="preview-tools">
+        <button id="editPreviewText" class="ghost" type="button">编辑</button>
+        <button id="textDownload" type="button">下载</button>
+        <button id="closeText" class="ghost" type="button">关闭</button>
+      </div>
+    </header>
+    <pre id="textContent" class="text-content"></pre>
+  </dialog>
+
+  <div id="loginOverlay" class="login-overlay active">
+    <form id="loginForm" class="login-dialog">
+      <div class="login-brand">
+        <img class="brand-mark" src="/static/logo.svg" alt="">
+        <div>
+          <h1 id="loginBrandTitle">度盘</h1>
+          <p>后台文件管理</p>
+        </div>
+      </div>
+      <div class="section-title">
+        <h2>登录后台</h2>
+        <p>请输入管理员账号和密码后继续。</p>
+      </div>
+      <label>账号<input id="loginUser" autocomplete="username" value="admin"></label>
+      <label>密码<input id="loginPass" type="password" autocomplete="current-password" placeholder="后台密码"></label>
+      <button type="submit">登录</button>
+      <p id="loginError" class="form-error"></p>
+    </form>
+  </div>
+
+  <div id="contextMenu" class="context-menu" role="menu"></div>
+
+  <div id="uploadProgress" class="upload-progress">
+    <div class="upload-progress-head">
+      <span id="uploadName">准备上传</span>
+      <strong id="uploadPercent">0%</strong>
+    </div>
+    <div class="upload-bar"><span id="uploadBar"></span></div>
+  </div>
+
+  <label id="uploadFab" class="upload-fab" title="上传文件">+<input id="file" type="file" multiple></label>
+  <div id="toast"></div>
+  <script src="/static/app.js?v=20260616-auth-auto"></script>
+</body>
+</html>

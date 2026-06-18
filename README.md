@@ -107,6 +107,8 @@ http://服务器IP:18088
 superneed/dpdrive:latest
 ```
 
+Docker 镜像构建和拉取不需要填写百度 App ID 或密钥。容器启动后，配置、扫码授权 token 和用户设置都会写入 `/app/data`，请把这个目录持久化。只有在你明确要使用自有百度开放平台应用时，才需要在运行期通过 `config.json` 或环境变量提供 `app_key`、`secret_key`。
+
 ### 1. 拉取镜像
 
 ```bash
@@ -125,9 +127,6 @@ docker run -d \
   --restart unless-stopped \
   -p 18088:8088 \
   -v dpdrive-data:/app/data \
-  -e DPDRIVE_BAIDU_APP_KEY=your_baidu_app_key \
-  -e DPDRIVE_BAIDU_SECRET_KEY=your_baidu_secret_key \
-  -e DPDRIVE_BAIDU_REDIRECT_URI=oob \
   superneed/dpdrive:latest
 ```
 
@@ -150,9 +149,6 @@ docker run -d \
   --restart unless-stopped \
   -p 18088:8088 \
   -v /opt/dpdrive/data:/app/data \
-  -e DPDRIVE_BAIDU_APP_KEY=your_baidu_app_key \
-  -e DPDRIVE_BAIDU_SECRET_KEY=your_baidu_secret_key \
-  -e DPDRIVE_BAIDU_REDIRECT_URI=oob \
   superneed/dpdrive:latest
 ```
 
@@ -160,7 +156,7 @@ docker run -d \
 
 ### 4. 使用已有 config.json
 
-也可以不通过环境变量传入百度应用配置，而是直接准备 `/app/data/config.json`：
+如果你要预置站点名称、后台密码、默认目录，或者使用自有百度开放平台应用，也可以提前准备 `/app/data/config.json`：
 
 ```bash
 mkdir -p /opt/dpdrive/data
@@ -178,7 +174,7 @@ docker run -d \
 
 ### 5. 使用 Docker Compose
 
-仓库提供了 `compose.yaml`。修改其中的百度应用环境变量后启动：
+仓库提供了 `compose.yaml`，默认不需要填写百度 App ID 或密钥：
 
 ```bash
 docker compose pull
@@ -228,9 +224,6 @@ docker run -d \
   --restart unless-stopped \
   -p 18088:8088 \
   -v dpdrive-data:/app/data \
-  -e DPDRIVE_BAIDU_APP_KEY=your_baidu_app_key \
-  -e DPDRIVE_BAIDU_SECRET_KEY=your_baidu_secret_key \
-  -e DPDRIVE_BAIDU_REDIRECT_URI=oob \
   superneed/dpdrive:latest
 ```
 

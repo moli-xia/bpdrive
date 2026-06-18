@@ -9,10 +9,6 @@ services:
       - "18088:8088"
     volumes:
       - dpdrive-data:/app/data
-    environment:
-      DPDRIVE_BAIDU_APP_KEY: your_baidu_app_key
-      DPDRIVE_BAIDU_SECRET_KEY: your_baidu_secret_key
-      DPDRIVE_BAIDU_REDIRECT_URI: oob
 
 volumes:
   dpdrive-data:

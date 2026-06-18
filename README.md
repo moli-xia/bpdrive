@@ -99,6 +99,21 @@ http://服务器IP:18088
 
 默认后台账号密码为 `admin` / `admin`。首次部署后应立即在后台设置中修改密码。
 
+## Docker
+
+```bash
+docker run -d \
+  --name dpdrive \
+  -p 18088:8088 \
+  -v bpdrive-data:/app/data \
+  -e BPDRIVE_BAIDU_APP_KEY=your_baidu_app_key \
+  -e BPDRIVE_BAIDU_SECRET_KEY=your_baidu_secret_key \
+  -e BPDRIVE_BAIDU_REDIRECT_URI=oob \
+  superneed/dpdrive:latest
+```
+
+容器内默认监听 `:8088`，配置和 token 保存在 `/app/data`。如果不通过环境变量传入百度应用配置，也可以把包含 `config.json` 的目录挂载到 `/app/data`。
+
 ## systemd 部署
 
 参考模板：`deploy/bpdrive.service.example`。

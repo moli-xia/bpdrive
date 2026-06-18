@@ -1,0 +1,13 @@
+.git
+.gitignore
+Dockerfile
+bpdrive
+data/config.json
+data/*.tmp
+data/*.bak
+*.exe
+*.test
+*.out
+.DS_Store
+.idea
+.vscode

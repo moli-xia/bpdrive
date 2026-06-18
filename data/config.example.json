@@ -6,7 +6,7 @@
   "default_dir": "/",
   "admin_user": "admin",
   "admin_pass": "admin",
-  "site_title": "度盘",
+  "site_title": "DPDrive",
   "token": {
     "access_token": "",
     "refresh_token": "",

@@ -1,12 +1,12 @@
 # 部署文档
 
-本文说明如何从源码构建并部署度盘。
+本文说明如何从源码构建并部署DPDrive。
 
 ## 1. 准备源码
 
 ```bash
-git clone https://github.com/moli-xia/bpdrive.git
-cd bpdrive
+git clone <your-dpdrive-repo-url>
+cd dpdrive
 ```
 
 ## 2. 准备配置
@@ -27,29 +27,29 @@ cp data/config.example.json data/config.json
   "default_dir": "/",
   "admin_user": "admin",
   "admin_pass": "admin",
-  "site_title": "度盘"
+  "site_title": "DPDrive"
 }
 ```
 
 如果不想把百度密钥写入配置文件，也可以通过环境变量传入：
 
 ```bash
-export BPDRIVE_BAIDU_APP_KEY=your_baidu_app_key
-export BPDRIVE_BAIDU_SECRET_KEY=your_baidu_secret_key
-export BPDRIVE_BAIDU_REDIRECT_URI=oob
+export DPDRIVE_BAIDU_APP_KEY=your_baidu_app_key
+export DPDRIVE_BAIDU_SECRET_KEY=your_baidu_secret_key
+export DPDRIVE_BAIDU_REDIRECT_URI=oob
 ```
 
 ## 3. 构建
 
 ```bash
 go test ./...
-go build -o bpdrive ./cmd/bpdrive
+go build -o dpdrive ./cmd/dpdrive
 ```
 
 ## 4. 直接运行
 
 ```bash
-BPDRIVE_ADDR=:18088 BPDRIVE_DATA=./data ./bpdrive
+DPDRIVE_ADDR=:18088 DPDRIVE_DATA=./data ./dpdrive
 ```
 
 访问：
@@ -63,24 +63,24 @@ http://服务器IP:18088
 复制程序和资源：
 
 ```bash
-mkdir -p /opt/bpdrive
-cp bpdrive /opt/bpdrive/
-cp -r web data /opt/bpdrive/
-cp deploy/bpdrive.service.example /etc/systemd/system/bpdrive.service
+mkdir -p /opt/dpdrive
+cp dpdrive /opt/dpdrive/
+cp -r web data /opt/dpdrive/
+cp deploy/dpdrive.service.example /etc/systemd/system/dpdrive.service
 ```
 
-按实际路径修改 `/etc/systemd/system/bpdrive.service`，然后启动：
+按实际路径修改 `/etc/systemd/system/dpdrive.service`，然后启动：
 
 ```bash
 systemctl daemon-reload
-systemctl enable --now bpdrive
-systemctl status bpdrive --no-pager
+systemctl enable --now dpdrive
+systemctl status dpdrive --no-pager
 ```
 
 查看日志：
 
 ```bash
-journalctl -u bpdrive -f
+journalctl -u dpdrive -f
 ```
 
 ## 6. 反向代理建议
@@ -109,8 +109,8 @@ server {
 ```bash
 git pull
 go test ./...
-go build -o bpdrive ./cmd/bpdrive
-systemctl restart bpdrive
+go build -o dpdrive ./cmd/dpdrive
+systemctl restart dpdrive
 ```
 
 升级前建议备份：

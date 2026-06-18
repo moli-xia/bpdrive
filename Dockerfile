@@ -6,24 +6,24 @@ RUN go mod download
 
 COPY cmd ./cmd
 COPY internal ./internal
-RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/bpdrive ./cmd/bpdrive
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/dpdrive ./cmd/dpdrive
 
 FROM alpine:3.20
 
-RUN addgroup -S bpdrive && adduser -S -G bpdrive bpdrive
+RUN addgroup -S dpdrive && adduser -S -G dpdrive dpdrive
 WORKDIR /app
 
-COPY --from=builder /out/bpdrive /app/bpdrive
+COPY --from=builder /out/dpdrive /app/dpdrive
 COPY web ./web
 COPY data/config.example.json /app/data/config.example.json
 
-ENV BPDRIVE_ADDR=:8088
-ENV BPDRIVE_DATA=/app/data
+ENV DPDRIVE_ADDR=:8088
+ENV DPDRIVE_DATA=/app/data
 
-RUN chown -R bpdrive:bpdrive /app
-USER bpdrive
+RUN chown -R dpdrive:dpdrive /app
+USER dpdrive
 
 EXPOSE 8088
 VOLUME ["/app/data"]
 
-CMD ["/app/bpdrive"]
+CMD ["/app/dpdrive"]

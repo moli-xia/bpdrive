@@ -5,19 +5,19 @@ import (
 	"net/http"
 	"os"
 
-	"bpdrive/internal/app"
+	"dpdrive/internal/app"
 )
 
 func main() {
-	addr := getenv("BPDRIVE_ADDR", ":8088")
-	dataDir := getenv("BPDRIVE_DATA", "./data")
+	addr := getenv("DPDRIVE_ADDR", getenv("BPDRIVE_ADDR", ":8088"))
+	dataDir := getenv("DPDRIVE_DATA", getenv("BPDRIVE_DATA", "./data"))
 
 	srv, err := app.New(dataDir)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Printf("bpdrive listening on %s", addr)
+	log.Printf("dpdrive listening on %s", addr)
 	if err := http.ListenAndServe(addr, srv.Routes()); err != nil {
 		log.Fatal(err)
 	}

@@ -1,7 +1,8 @@
 .git
 .gitignore
 Dockerfile
-bpdrive
+/bpdrive
+/dpdrive
 data/config.json
 data/*.tmp
 data/*.bak

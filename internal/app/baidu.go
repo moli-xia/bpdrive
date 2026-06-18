@@ -253,7 +253,7 @@ func (c *BaiduClient) getJSON(u string, out interface{}) error {
 	if err != nil {
 		return err
 	}
-	req.Header.Set("User-Agent", "bpdrive/1.0")
+	req.Header.Set("User-Agent", "dpdrive/1.0")
 	resp, err := c.http.Do(req)
 	if err != nil {
 		return err
@@ -282,7 +282,7 @@ func (c *BaiduClient) form(base string, query, form url.Values) (map[string]inte
 		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("User-Agent", "bpdrive/1.0")
+	req.Header.Set("User-Agent", "dpdrive/1.0")
 	resp, err := c.http.Do(req)
 	if err != nil {
 		return nil, err

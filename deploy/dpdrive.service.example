@@ -1,0 +1,21 @@
+[Unit]
+Description=DPDrive
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/dpdrive
+Environment=DPDRIVE_ADDR=:18088
+Environment=DPDRIVE_DATA=/opt/dpdrive/data
+# Optional: set credentials here instead of data/config.json.
+# Environment=DPDRIVE_BAIDU_APP_KEY=your_baidu_app_key
+# Environment=DPDRIVE_BAIDU_SECRET_KEY=your_baidu_secret_key
+# Environment=DPDRIVE_BAIDU_REDIRECT_URI=oob
+ExecStart=/opt/dpdrive/dpdrive
+Restart=always
+RestartSec=3
+User=www
+Group=www
+
+[Install]
+WantedBy=multi-user.target

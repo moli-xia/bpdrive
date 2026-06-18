@@ -118,7 +118,7 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.SetCookie(w, &http.Cookie{
-		Name:     "bpdrive_session",
+		Name:     "dpdrive_session",
 		Value:    s.signSession(cfg.AdminUser, time.Now().Add(24*time.Hour).Unix()),
 		Path:     "/",
 		MaxAge:   86400,
@@ -129,7 +129,7 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) sessionLogout(w http.ResponseWriter, r *http.Request) {
-	http.SetCookie(w, &http.Cookie{Name: "bpdrive_session", Value: "", Path: "/", MaxAge: -1, HttpOnly: true, SameSite: http.SameSiteLaxMode})
+	http.SetCookie(w, &http.Cookie{Name: "dpdrive_session", Value: "", Path: "/", MaxAge: -1, HttpOnly: true, SameSite: http.SameSiteLaxMode})
 	writeJSON(w, ok())
 }
 
@@ -663,7 +663,7 @@ func (s *Server) authURLForRequest(r *http.Request, cfg Config) string {
 }
 
 func (s *Server) validSession(r *http.Request) bool {
-	cookie, err := r.Cookie("bpdrive_session")
+	cookie, err := r.Cookie("dpdrive_session")
 	if err != nil || cookie.Value == "" {
 		return false
 	}
@@ -689,7 +689,7 @@ func (s *Server) signSession(user string, exp int64) string {
 }
 
 func (s *Server) sessionMAC(user string, exp int64, secret string) string {
-	mac := hmac.New(sha256.New, []byte("bpdrive:"+secret))
+	mac := hmac.New(sha256.New, []byte("dpdrive:"+secret))
 	_, _ = mac.Write([]byte(user + "|" + strconv.FormatInt(exp, 10)))
 	return hex.EncodeToString(mac.Sum(nil))
 }

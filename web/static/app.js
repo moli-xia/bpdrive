@@ -75,7 +75,7 @@ async function checkSession() {
 }
 
 function setSiteTitle(title) {
-  const name = title || "度盘";
+  const name = title || "DPDrive";
   $("title").textContent = name;
   $("brandTitle").textContent = name;
   $("loginBrandTitle").textContent = name;

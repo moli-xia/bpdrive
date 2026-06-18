@@ -48,7 +48,7 @@
 systemd 运行时查看日志：
 
 ```bash
-journalctl -u bpdrive -f
+journalctl -u dpdrive -f
 ```
 
 ## 备份
@@ -89,8 +89,8 @@ cp data/config.json data/config.json.$(date +%Y%m%d%H%M%S).bak
 检查：
 
 ```bash
-systemctl status bpdrive --no-pager
-journalctl -u bpdrive -n 100 --no-pager
+systemctl status dpdrive --no-pager
+journalctl -u dpdrive -n 100 --no-pager
 ```
 
 常见原因：

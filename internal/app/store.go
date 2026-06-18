@@ -10,9 +10,12 @@ import (
 )
 
 const (
-	envBaiduAppKey    = "BPDRIVE_BAIDU_APP_KEY"
-	envBaiduSecretKey = "BPDRIVE_BAIDU_SECRET_KEY"
-	envBaiduRedirect  = "BPDRIVE_BAIDU_REDIRECT_URI"
+	envBaiduAppKey       = "DPDRIVE_BAIDU_APP_KEY"
+	envBaiduSecretKey    = "DPDRIVE_BAIDU_SECRET_KEY"
+	envBaiduRedirect     = "DPDRIVE_BAIDU_REDIRECT_URI"
+	legacyBaiduAppKey    = "BPDRIVE_BAIDU_APP_KEY"
+	legacyBaiduSecretKey = "BPDRIVE_BAIDU_SECRET_KEY"
+	legacyBaiduRedirect  = "BPDRIVE_BAIDU_REDIRECT_URI"
 )
 
 type Config struct {
@@ -116,25 +119,25 @@ func (s *Store) saveLocked() error {
 
 func defaultConfig() Config {
 	return Config{
-		AppKey:      os.Getenv(envBaiduAppKey),
-		SecretKey:   os.Getenv(envBaiduSecretKey),
-		RedirectURI: getenvDefault(envBaiduRedirect, "oob"),
+		AppKey:      getenvFirst(envBaiduAppKey, legacyBaiduAppKey, ""),
+		SecretKey:   getenvFirst(envBaiduSecretKey, legacyBaiduSecretKey, ""),
+		RedirectURI: getenvFirst(envBaiduRedirect, legacyBaiduRedirect, "oob"),
 		DefaultDir:  "/",
 		AdminUser:   "admin",
 		AdminPass:   "admin",
-		SiteTitle:   "度盘",
+		SiteTitle:   "DPDrive",
 	}
 }
 
 func normalizeConfig(c *Config) {
 	if c.AppKey == "" {
-		c.AppKey = os.Getenv(envBaiduAppKey)
+		c.AppKey = getenvFirst(envBaiduAppKey, legacyBaiduAppKey, "")
 	}
 	if c.SecretKey == "" {
-		c.SecretKey = os.Getenv(envBaiduSecretKey)
+		c.SecretKey = getenvFirst(envBaiduSecretKey, legacyBaiduSecretKey, "")
 	}
 	if c.RedirectURI == "" {
-		c.RedirectURI = getenvDefault(envBaiduRedirect, "oob")
+		c.RedirectURI = getenvFirst(envBaiduRedirect, legacyBaiduRedirect, "oob")
 	}
 	if c.DefaultDir == "" {
 		c.DefaultDir = "/"
@@ -147,12 +150,15 @@ func normalizeConfig(c *Config) {
 		c.AdminPass = "admin"
 	}
 	if c.SiteTitle == "" {
-		c.SiteTitle = "度盘"
+		c.SiteTitle = "DPDrive"
 	}
 }
 
-func getenvDefault(key, fallback string) string {
-	if v := os.Getenv(key); v != "" {
+func getenvFirst(primary, legacy, fallback string) string {
+	if v := os.Getenv(primary); v != "" {
+		return v
+	}
+	if v := os.Getenv(legacy); v != "" {
 		return v
 	}
 	return fallback
